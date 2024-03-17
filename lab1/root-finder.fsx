@@ -1,9 +1,8 @@
-let eps = 0.000001
+let eps = 0.0001
 
 let rec dichotomy f a b =
     let m = (a + b) / 2.
     let fa = f(a)
-    let fb = f(b)
     let fm = f(m)
 
     if abs(f(m)) < eps then m
@@ -19,7 +18,7 @@ let rec iterations phi x0 =
 
 
 let newthon f f' x0 =
-    let phi x : float = x - (f(x)) / (f'(x))
+    let phi x : float = x - f(x)/f'(x)
     iterations phi x0
 
 let f1 x = 2.0 * x * sin x - cos x
@@ -36,9 +35,15 @@ let f2' x = System.Math.Exp(x) + System.Math.Exp(2.0 * x)/(1.0 + System.Math.Exp
 let f3' x = 1.0/x - 1.0
 
 
-let phi1 x = 
+let phi1 x = x - (2.0 * x * sin x - cos x) / (2.0 * sin x + x * cos x)
+
+let phi2 x = x - (System.Math.Exp(x) + (1.0 + System.Math.Exp(2.0 * x))**0.5 - 2.0) / (System.Math.Exp(x) + System.Math.Exp(2.0 * x) / 2.0)
+
+let phi3 x = x - (System.Math.Log(x) - x + 1.8) / (1.0 / x - 1.0)
 
 
-printfn "%10.5f  %10.5f  %10.5f" (dichotomy f1  0.4 1.0) (iterations phi1 1.5) (newthon f1 f1' 1.5)
-printfn "%10.5f  %10.5f  %10.5f" (dichotomy f2 -1.0 0.0) (iterations phi2 0.4) (newthon f2 f2' 0.4)
-printfn "%10.5f  %10.5f  %10.5f" (dichotomy f3  2.0 3.0) (iterations phi3 0.5) (newthon f3 f3' 0.5)
+printfn "func |   dichotomy   |  iterations   |     Newton     "
+printfn "====================================================="
+printfn "f1   |  %3.10f |  %3.10f |  %3.10f " (dichotomy f1  0.4 1.0) (iterations phi1 0.6) (newthon f1 f1' 0.6)
+printfn "f2   | %3.10f | %3.10f | %3.10f " (dichotomy f2 -1.0 0.0) (iterations phi2 -0.5) (newthon f2 f2' -0.5)
+printfn "f3   |  %3.10f |  %3.10f |  %3.10f " (dichotomy f3  2.0 3.0) (iterations phi3 2.5) (newthon f3 f3' 2.5)
